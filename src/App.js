@@ -7,7 +7,7 @@ function App() {
       <div className="wrapper">
         <div className="form-wrapper"> 
           <h1>Create Account</h1>
-          <form  noValidate>
+          <form noValidate>
             <div className="firstName">
               <label htmlFor="firstName">First Name</label>
               <input type="text" 
@@ -32,7 +32,7 @@ function App() {
 
             <div className="email">
               <label htmlFor="email">Email</label>
-              <input type="text" 
+              <input type="email" 
                 noValidate
                 name="email"
                 placeholder="Email"
@@ -43,7 +43,7 @@ function App() {
 
             <div className="password">
               <label htmlFor="password">Password</label>
-              <input type="text" 
+              <input type="password" 
                 noValidate
                 name="password"
                 placeholder="Password"
@@ -51,7 +51,10 @@ function App() {
                 
               />
             </div>
-
+            <div className="createAccount">
+              <button type="submit">Create Account</button>
+              <small>Already Have an Account</small>
+            </div>
           </form>
         </div>
       </div>
