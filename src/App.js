@@ -3,10 +3,14 @@ import './App.css';
 
 const emailRegex= RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^-{|}~`_']+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
 
-const formValid = formErrors => {
+const formValid = ({formErrors, ...rest}) => {
   let valid= true;
   Object.values(formErrors).forEach(val => {
-      (val.length>0) && (valid = false);
+      val.length>0 && (valid = false);
+    });
+
+    Object.values(rest).forEach(val => {
+      val===null && (valid = false);
     });
   return valid;
 }
@@ -27,9 +31,9 @@ class App extends Component {
       }
     };
   }
-  handleSubmit = element => {
-    element.preventDefault();
-    if(formValid(this.state.formErrors)){
+  handleSubmit = e => {
+    e.preventDefault();
+    if(formValid(this.state)){
       console.log(`
         --SUBMITING--
         First Name: ${this.state.firstName}
@@ -42,41 +46,34 @@ class App extends Component {
     }
   }
 
-  handleChange = element => {
-    element.preventDefault();
-    const {name, value}=element.target;
-    let formErrors= this.state.formErrors;
+  handleChange = e => {
+    e.preventDefault();
+    const {name, value}=e.target;
+    let formErrors= {...this.state.formErrors};
     
 
     switch(name){
       case "firstName":
         formErrors.firstName=
-          value.length<3 && value.length>=0 
-          ? "minimum 3 characters required" 
-          : "";
+          value.length<3 ? "minimum 3 characters required" : "";
         break;
-        case "lastName":
-        formErrors.lasttName=
-          value.length<3 && value.length>=0 
-          ? "minimum 3 characters required" 
-          : "";
+      case "lastName":
+        formErrors.lastName=
+          value.length<3 ? "minimum 3 characters required" : "";
         break;
-        case "email":
-        formErrors.email=
-          emailRegex.test(value) && value.length>0 
+      case "email":
+        formErrors.email= emailRegex.test(value)
           ? "" 
           : "Invalid Email Address";
         break;
-        case "password":
+      case "password":
         formErrors.password=
-          value.length< 6 && value.length>=0 
-          ? "minimum 6 characters required" 
-          : "";
+          value.length< 6 ? "minimum 6 characters required" : "";
         break;
-          default:
+      default:
         break;
     }
-    this.setState=({formErrors, [name]:value}, (console.log(this.state)));
+    this.setState({formErrors,[name]:value}, () => console.log(this.state));
   };
 
   render() { 
@@ -97,7 +94,7 @@ class App extends Component {
                 onChange= {this.handleChange}
               />
               {formErrors.firstName.length>0 && (
-                <span className="errorMessage">{formErrors.formErrors.firstName}</span>
+                <span className="errorMessage">{formErrors.firstName}</span>
               )}
             </div>
 
@@ -107,9 +104,12 @@ class App extends Component {
                 noValidate
                 name="lastName"
                 placeholder="Last Name"
-                className=""
+                className={formErrors.lastName.length > 0 ? "error" : null}
                 onChange= {this.handleChange}
               />
+              {formErrors.lastName.length>0 && (
+                <span className="errorMessage">{formErrors.lastName}</span>
+              )}
             </div>
 
             <div className="email">
@@ -118,9 +118,12 @@ class App extends Component {
                 noValidate
                 name="email"
                 placeholder="Email"
-                className=""
+                className={formErrors.email.length > 0 ? "error" : null}
                 onChange= {this.handleChange}
               />
+              {formErrors.email.length>0 && (
+                <span className="errorMessage">{formErrors.email}</span>
+              )}
             </div>
 
             <div className="password">
@@ -129,9 +132,12 @@ class App extends Component {
                 noValidate
                 name="password"
                 placeholder="Password"
-                className=""
+                className={formErrors.password.length > 0 ? "error" : null}
                 onChange= {this.handleChange}
               />
+              {formErrors.password.length>0 && (
+                <span className="errorMessage">{formErrors.password}</span>
+              )}
             </div>
             <div className="createAccount">
               <button type="submit">Create Account</button>
