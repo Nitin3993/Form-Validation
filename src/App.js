@@ -148,7 +148,7 @@ class App extends Component {
             <div className="createAccount">
               <button type="submit">Create Account</button>
               <small>Already Have an Account</small>
-              <button type="reset" >Reset</button>
+              <button type="reset" >Reset </button>
             </div>
           </form>
         </div>
